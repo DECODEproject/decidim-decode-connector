@@ -1,0 +1,9 @@
+version: '3'
+services:
+  tor:
+    image: osminogin/tor-simple
+  create:
+    build: .
+    image: decidim-decode-connect
+    depends_on:
+      - tor
