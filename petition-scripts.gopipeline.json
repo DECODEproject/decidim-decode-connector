@@ -1,0 +1,72 @@
+{
+  "name": "Petition-Scripts",
+  "environment_variables": [],
+  "group" : "ScaleModel",
+  "materials": [
+    {
+      "url": "https://github.com/DECODEproject/decidim-decode-connector.git",
+      "type": "git"
+    }
+  ],
+  "stages": [
+    {
+      "name": "unit-test",
+      "fetch_materials": true,
+      "never_cleanup_artifacts": false,
+      "clean_working_directory": true,
+      "environment_variables": [],
+      "jobs": [
+        {
+          "name": "unit-test",
+          "environment_variables": [],
+          "tabs": [],
+          "resources": ["python"],
+          "artifacts": [],
+          "properties": [],
+          "run_instance_count": null,
+          "timeout": 0,
+          "tasks": [
+            {
+              "type": "exec",
+              "run_if": "passed",
+              "on_cancel" : null,
+              "command": "docker",
+              "arguments": [
+                "build",
+                "-t",
+                "decidim-decode-connector",
+                "."
+              ]
+            },
+            {
+              "type": "exec",
+              "run_if": "passed",
+              "on_cancel" : null,
+              "command": "docker",
+              "arguments": [
+                "run",
+                "decidim-decode-connector",
+                "pycodestyle",
+                "--ignore=E501",
+                "."
+              ]
+            },
+            {
+              "type": "exec",
+              "run_if": "passed",
+              "on_cancel" : null,
+              "command": "docker",
+              "arguments": [
+                "run",
+                "-e",
+                "PYTHONPATH=/code",
+                "decidim-decode-connector",
+                "py.test"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

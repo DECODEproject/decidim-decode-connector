@@ -1,9 +1,10 @@
 version: '3'
 services:
   tor:
-    image: osminogin/tor-simple
+    image: osminogin/tor-simple:latest
   create:
     build: .
-    image: decidim-decode-connect
+    image: decidim-decode-connector
+    command: ["python", "create.py"]
     depends_on:
       - tor
