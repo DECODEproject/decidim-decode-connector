@@ -6,5 +6,7 @@ services:
     build: .
     image: decidim-decode-connector
     command: ["python", "create.py"]
+    environment:
+      - WALLET_PROXY_URL
     depends_on:
       - tor
