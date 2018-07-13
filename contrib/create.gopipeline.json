@@ -1,0 +1,67 @@
+{
+  "name": "Create-Petition",
+  "environment_variables": [],
+  "group" : "OpsTools",
+  "materials": [
+    {
+      "url": "https://github.com/DECODEproject/decidim-decode-connector.git",
+      "type": "git"
+    }
+  ],
+  "stages": [
+    {
+      "name": "decidim-create-petition",
+      "approval": {
+        "type": "manual",
+        "users": ["jordi","elisa","elena","albert", "guy"],
+        "roles": []
+      },
+      "fetch_materials": true,
+      "never_cleanup_artifacts": false,
+      "clean_working_directory": true,
+      "environment_variables": [],
+      "jobs": [
+        {
+          "name": "create-petition",
+          "environment_variables": [
+            {
+              "name": "DECIDIM_MOCK_URL",
+              "value": "http://ec2-34-253-207-49.eu-west-1.compute.amazonaws.com"
+            },
+            {
+              "name": "WALLET_PROXY_URL",
+              "value": "http://ec2-54-194-123-109.eu-west-1.compute.amazonaws.com"
+            }
+          ],
+          "tabs": [],
+          "resources": ["python"],
+          "artifacts": [],
+          "properties": [],
+          "run_instance_count": null,
+          "timeout": 0,
+          "tasks": [
+            {
+              "type": "exec",
+              "run_if": "passed",
+              "on_cancel" : null,
+              "command": "docker-compose",
+              "arguments": [
+                "build"
+              ]
+            },
+            {
+              "type": "exec",
+              "run_if": "passed",
+              "on_cancel" : null,
+              "command": "sh",
+              "arguments": [
+                "-c",
+                "docker-compose run -e DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL} -e WALLET_PROXY_URL=${WALLET_PROXY_URL}  create python create.py"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
