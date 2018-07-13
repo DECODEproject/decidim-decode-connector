@@ -21,6 +21,7 @@ pluggy==0.6.0
 py==1.5.3
 pycodestyle==2.4.0
 pycparser==2.18
+PySocks==1.6.8
 pytest==3.5.1
 pytest-cov==2.5.1
 pytest-watch==4.1.0

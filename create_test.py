@@ -11,38 +11,49 @@ class CreateTestCase(unittest.TestCase):
         self.wallet_proxy_url = 'http://localhost:5010'
         self.wallet_proxy_mock_create_url = '%s/chainspace/petitions' % (self.wallet_proxy_url)
 
-    @mock.patch.dict(os.environ, {'WALLET_PROXY_URL': 'http://prod.decode.com:8080'})
-    def test_get_wallet_proxy_url_from_environ(self):
-        wallet_proxy_url = create.get_wallet_proxy_url()
-        expected = 'http://prod.decode.com:8080'
+    @mock.patch.dict(os.environ, {'CHAINSPACE_API_URL': 'http://prod.csapi.com:5000'})
+    def test_get_chainspace_api_url_from_environ(self):
+        chainspace_api_url = create.get_chainspace_api_url()
+        expected = 'http://prod.csapi.com:5000'
 
-        self.assertEqual(wallet_proxy_url, expected)
+        self.assertEqual(chainspace_api_url, expected)
 
     @mock.patch.dict(os.environ, {})
-    def test_get_wallet_proxy_url_without_env_should_return_default(self):
-        wallet_proxy_url = create.get_wallet_proxy_url()
-        expected = create.DEFAULT_WALLET_PROXY_URL
+    def test_get_chainspace_api_url_without_env_should_return_default(self):
+        chainspace_api_url = create.get_chainspace_api_url()
+        expected = create.DEFAULT_CHAINSPACE_API_URL
 
-        self.assertEqual(wallet_proxy_url, expected)
+        self.assertEqual(chainspace_api_url, expected)
 
-    @responses.activate
-    def test_post_mock_wallet_proxy_result_success(self):
-        responses.add(responses.POST, self.wallet_proxy_mock_create_url, json={}, status=200)
+    @mock.patch.dict(os.environ, {'TOR_PROXY_URL': 'socks5h://tor:9050'})
+    def test_get_tor_proxy_url_from_environ(self):
+        tor_proxy_url = create.get_tor_proxy_url()
+        expected = 'socks5h://tor:9050'
 
-        create.create_petition(self.wallet_proxy_url)
+        self.assertEqual(tor_proxy_url, expected)
 
-        self.assertEqual(len(responses.calls), 1)
+    @mock.patch.dict(os.environ, {})
+    def test_get_tor_proxy_url_without_env_should_return_default(self):
+        tor_proxy_url = create.get_tor_proxy_url()
+        expected = create.DEFAULT_TOR_PROXY_URL
 
-    @responses.activate
-    def test_post_mock_wallet_proxy_result_status_codes(self):
-        responses.add(responses.POST, self.wallet_proxy_mock_create_url, status=500)
+        self.assertEqual(tor_proxy_url, expected)
+
+    @mock.patch('create.petition')
+    def test_create_petition_returns_petition_object_id(self, petition_func_mock):
+        petition_mock = mock.Mock()
+        petition_mock.initialize.return_value = mock.Mock(object_id='111')
+        petition_func_mock.return_value = petition_mock
+
+        actual = create.create_petition()
+
+        self.assertEqual(actual, {'petitionObjectId': '111'})
+
+    @mock.patch('create.petition')
+    def test_create_petition_raises_exception_if_error_initializing(self, petition_func_mock):
+        petition_mock = mock.Mock()
+        petition_mock.initialize.side_effect = Exception('')
+        petition_func_mock.return_value = petition_mock
 
         with self.assertRaises(create.CreateRequestException):
-            create.create_petition(self.wallet_proxy_url)
-
-    @responses.activate
-    def test_post_mock_wallet_proxy_handles_connection_errors(self):
-        responses.add(responses.POST, self.wallet_proxy_mock_create_url, body=Exception('Connection error'), status=500)
-
-        with self.assertRaises(create.CreateRequestException):
-            create.create_petition(self.wallet_proxy_url)
+            actual = create.create_petition()

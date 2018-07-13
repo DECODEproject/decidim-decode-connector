@@ -25,12 +25,8 @@
           "name": "create-petition",
           "environment_variables": [
             {
-              "name": "DECIDIM_MOCK_URL",
-              "value": "http://ec2-34-253-207-49.eu-west-1.compute.amazonaws.com"
-            },
-            {
-              "name": "WALLET_PROXY_URL",
-              "value": "http://ec2-54-194-123-109.eu-west-1.compute.amazonaws.com"
+              "name": "CHAINSPACE_API_URL",
+              "value": "http://dszj4sila655fk3s.onion:5000/api/1.0"
             }
           ],
           "tabs": [],
@@ -56,7 +52,7 @@
               "command": "sh",
               "arguments": [
                 "-c",
-                "docker-compose run -e DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL} -e WALLET_PROXY_URL=${WALLET_PROXY_URL}  create python create.py"
+                "docker-compose run -e CHAINSPACE_API_URL=${CHAINSPACE_API_URL} create"
               ]
             }
           ]

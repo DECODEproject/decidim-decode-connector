@@ -24,7 +24,7 @@ docker-compose build
 
 ```
 docker-compose run \
-  -e WALLET_PROXY_URL=<wallet_proxy_url> \
+  -e CHAINSPACE_API_URL=<chainspace_api_url> \
   create
 ```
 
@@ -40,17 +40,17 @@ docker-compose run \
 ### Run linter
 
 ```
-docker run \
+docker run -ti \
   -v $(pwd):/code \
   decidim-decode-connector:latest \
-  pycodestyle --ignore=E501 .
+  pycodestyle --exclude='chainspacecontract/' --ignore=E501 .
 ```
 
 ### Run tests
 
 ```
-docker run \
+docker run -ti \
   -v $(pwd):/code \
   -e PYTHONPATH=/code \
-  decidim-decode-connector py.test
+  decidim-decode-connector py.test --ignore chainspacecontract
 ```

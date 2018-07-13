@@ -7,7 +7,8 @@ services:
     image: decidim-decode-connector
     command: ["python", "create.py"]
     environment:
-      - WALLET_PROXY_URL
+      - CHAINSPACE_API_URL
+      - TOR_PROXY_URL=socks5h://tor:9050
     depends_on:
       - tor
   close:
