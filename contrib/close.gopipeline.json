@@ -1,5 +1,5 @@
 {
-  "name": "Decode-Connector-Create-Petition",
+  "name": "Decode-Connector-Close-Petition",
   "environment_variables": [],
   "group" : "OpsTools",
   "materials": [
@@ -10,7 +10,7 @@
   ],
   "stages": [
     {
-      "name": "decidim-create-petition",
+      "name": "decidim-close-petition",
       "approval": {
         "type": "manual",
         "users": ["jordi","elisa","elena","albert", "guy", "raul"],
@@ -22,7 +22,7 @@
       "environment_variables": [],
       "jobs": [
         {
-          "name": "create-petition",
+          "name": "close-petition",
           "environment_variables": [
             {
               "name": "DECIDIM_MOCK_URL",
@@ -56,7 +56,7 @@
               "command": "sh",
               "arguments": [
                 "-c",
-                "docker-compose run -e DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL} -e WALLET_PROXY_URL=${WALLET_PROXY_URL}  create python create.py"
+                "docker-compose run -e DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL} -e WALLET_PROXY_URL=${WALLET_PROXY_URL}  close"
               ]
             }
           ]

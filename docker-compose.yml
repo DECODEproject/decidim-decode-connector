@@ -10,3 +10,12 @@ services:
       - WALLET_PROXY_URL
     depends_on:
       - tor
+  close:
+    build: .
+    image: decidim-decode-connector
+    command: ["python", "close.py", "--seed", "alice"]
+    environment:
+      - WALLET_PROXY_URL
+      - DECIDIM_MOCK_URL
+    depends_on:
+      - tor
