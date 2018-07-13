@@ -24,8 +24,7 @@ docker-compose build
 
 ```
 docker-compose run \
-  -e DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL} \
-  -e WALLET_PROXY_URL=${WALLET_PROXY_URL} \
+  -e WALLET_PROXY_URL=<wallet_proxy_url> \
   create
 ```
 
@@ -33,8 +32,8 @@ docker-compose run \
 
 ```
 docker-compose run \
-  -e DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL} \
-  -e WALLET_PROXY_URL=${WALLET_PROXY_URL} \
+  -e DECIDIM_MOCK_URL=<decidim_mock_url> \
+  -e WALLET_PROXY_URL=<wallet_proxy_url> \
   close
 ```
 
