@@ -1,7 +1,5 @@
 from chainspacecontract.examples.utils import setup, key_gen, pack
-from src.exceptions.sign_closed_petition_exception import SignClosedPetitionException
 from src.exceptions.tally_closed_petition_exception import TallyClosedPetitionException
-from src.signature import Signature
 import json
 from hashlib import sha256
 from petlib.bn import Bn
@@ -29,27 +27,6 @@ class Petition:
         petition_token = self.__initialize_contract()
         new_petition_object = self.__create_petition(petition_token)
         return new_petition_object
-
-    def increment(self, vote, gender, age):
-        outputs = self.__get_chainspace_objects_of_last_transaction()
-        inputs = (outputs[-1],)
-
-        signature = Signature(vote, gender, age)
-        contract_signature = signature.get_contract_signature_representation()
-
-        try:
-            transaction = self.contract.add_signature(
-                inputs,
-                self.reference_inputs,
-                self.parameters,
-                json.dumps(contract_signature)
-            )
-        except Exception as err:
-            if str(err) == "'tally_pub'":
-                raise SignClosedPetitionException()
-            raise
-
-        return self.chainspace_repository.process_transaction(transaction)
 
     def get_results(self, key_pair):
         (private_key, public_key) = key_pair

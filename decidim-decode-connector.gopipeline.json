@@ -47,6 +47,7 @@
                 "run",
                 "decidim-decode-connector",
                 "pycodestyle",
+                "--exclude='chainspacecontract/'",
                 "--ignore=E501",
                 "."
               ]
@@ -61,7 +62,9 @@
                 "-e",
                 "PYTHONPATH=/code",
                 "decidim-decode-connector",
-                "py.test"
+                "py.test",
+                "--ignore",
+                "chainspacecontract"
               ]
             }
           ]
