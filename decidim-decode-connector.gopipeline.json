@@ -47,7 +47,7 @@
                 "run",
                 "decidim-decode-connector",
                 "pycodestyle",
-                "--exclude='chainspacecontract/'",
+                "--exclude=chainspacecontract/",
                 "--ignore=E501",
                 "."
               ]
