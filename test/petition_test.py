@@ -3,7 +3,6 @@ import json
 from mock import Mock, call
 from src.petition import Petition
 from src.transaction_log import TransactionLog
-from src.exceptions.sign_closed_petition_exception import SignClosedPetitionException
 from src.exceptions.tally_closed_petition_exception import TallyClosedPetitionException
 from src.exceptions.empty_transaction_log_exception import EmptyTransactionLogException
 from json import loads
