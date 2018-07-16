@@ -15,8 +15,8 @@ class PetitionTest(unittest.TestCase):
         self.contract_mock = Mock()
         self.contract_mock.contract = Mock()
 
-        self.petition = Petition(self.chainspace_repository_mock, self.contract_mock)
         self.key_pair = ("hola fondo norte", "hola fondo sur")
+        self.petition = Petition(self.chainspace_repository_mock, self.contract_mock, self.key_pair)
 
     def test_initialize_petition_should_return_new_petition_object(self):
         init_transaction = {
@@ -59,7 +59,7 @@ class PetitionTest(unittest.TestCase):
         }
         self.contract_mock.tally.return_value = tally_petition_transaction
 
-        output = self.petition.get_results(self.key_pair)
+        output = self.petition.get_results()
 
         self.contract_mock.tally.assert_called_with(inputs, self.petition.reference_inputs, self.petition.parameters, self.key_pair[0], self.key_pair[1])
         self.chainspace_repository_mock.process_transaction.assert_called_with(tally_petition_transaction)
@@ -82,7 +82,7 @@ class PetitionTest(unittest.TestCase):
         }
         self.contract_mock.tally.return_value = tally_petition_transaction
 
-        output = self.petition.get_results(self.key_pair)
+        output = self.petition.get_results()
 
         self.contract_mock.tally.assert_called_with(inputs, self.petition.reference_inputs, self.petition.parameters, self.key_pair[0], self.key_pair[1])
         self.chainspace_repository_mock.process_transaction.assert_called_with(tally_petition_transaction)
@@ -95,7 +95,7 @@ class PetitionTest(unittest.TestCase):
         self.contract_mock.tally.side_effect = Exception("'scores'")
 
         with self.assertRaises(EmptyTransactionLogException):
-            self.petition.get_results(self.key_pair)
+            self.petition.get_results()
 
     def test_get_results_should_raise_exception_if_petition_is_closed(self):
         transaction_log = loads("""[
@@ -108,4 +108,4 @@ class PetitionTest(unittest.TestCase):
         self.contract_mock.tally.side_effect = Exception("'scores'")
 
         with self.assertRaises(TallyClosedPetitionException):
-            self.petition.get_results(self.key_pair)
+            self.petition.get_results()

@@ -7,29 +7,21 @@ from petlib.bn import Bn
 
 class Petition:
 
-    def __init__(self, chainspace_repository, contract):
+    def __init__(self, chainspace_repository, contract, keys):
         self.chainspace_repository = chainspace_repository
         self.contract = contract
 
-        (self.private_key, self.public_key) = self.generate_key_pair()
+        (self.private_key, self.public_key) = keys
 
         self.reference_inputs = None
         self.parameters = None
-
-    def generate_key_pair(self):
-        (G, g, hs, o) = setup()
-        hash = sha256("alice").hexdigest()
-        private = Bn.from_hex(hash)
-        public = private * g
-        return private, public
 
     def initialize(self):
         petition_token = self.__initialize_contract()
         new_petition_object = self.__create_petition(petition_token)
         return new_petition_object
 
-    def get_results(self, key_pair):
-        (private_key, public_key) = key_pair
+    def get_results(self):
         inputs = [self.__get_chainspace_objects_of_last_transaction()[-1]]
 
         try:
@@ -37,8 +29,8 @@ class Petition:
                 inputs,
                 self.reference_inputs,
                 self.parameters,
-                private_key,
-                public_key
+                self.private_key,
+                self.public_key
             )
         except Exception as err:
             if str(err) == "'scores'":

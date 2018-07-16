@@ -1,9 +1,4 @@
 from os import environ
-from hashlib import sha256
-from petlib.bn import Bn
-from petlib.ec import EcGroup
-from petlib.pack import encode
-from binascii import hexlify
 import requests
 import json
 import click
@@ -23,17 +18,13 @@ class CloseRequestException(Exception):
         return 'Failed to close Decidim petition: ' + self.message
 
 
-def encode_key(key):
-    return hexlify(encode(key))
+def load_keys(filename="/keys/key.json"):
+    with open(filename, 'r') as fp:
+        key = json.load(fp)
 
-
-def generate_keys(seed):
-    g = EcGroup().generator()
-    private = Bn.from_hex(seed)
-    public = private * g
-    private = encode_key(private)
-    public = encode_key(public)
-    return private, public
+        pub = key['pub']
+        priv = key['priv']
+        return priv, pub
 
 
 def get_wallet_proxy_url():
@@ -74,9 +65,8 @@ def decidim_close(url, results):
         raise CloseRequestException(response.text)
 
 
-def main(seed):
-    seed = sha256(seed).hexdigest()
-    key_pair = generate_keys(seed)
+def main(keyfile):
+    key_pair = load_keys(keyfile)
     wallet_proxy_url = get_wallet_proxy_url()
     decidim_mock_url = get_decidim_mock_url()
 
@@ -92,9 +82,9 @@ def main(seed):
 
 
 @click.command()
-@click.option('--seed', required=True, help='Seed for key generation')
-def cli_main(seed):
-    main(seed)
+@click.option('--keyfile', default='/keys/key.json', help='Seed for key generation')
+def cli_main(keyfile):
+    main(keyfile)
 
 
 if __name__ == '__main__':

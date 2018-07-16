@@ -38,14 +38,31 @@ def createChainspaceClient():
     return ChainspaceClient(tor_proxy_url, hostname, port)
 
 
-def petition():
-    chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url())
+def unpack(x):
+    return decode(unhexlify(x))
+
+
+def load_keys(filename="/keys/key.json"):
+    with open(filename, 'r') as fp:
+        key = json.load(fp)
+
+        pub = key['pub']
+        priv = key['priv']
+
+        pub = unpack(pub)
+        priv = unpack(priv)
+
+        return priv, pub
+
+
+def petition(keys):
+    chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url(), keys)
     return Petition(chainspace_repository, petition_contract)
 
 
-def create_petition():
+def create_petition(keys):
     try:
-        our_object = petition().initialize()
+        our_object = petition(keys).initialize()
 
         petitionObjectID = our_object.object_id
         result = {'petitionObjectId': petitionObjectID}
@@ -55,9 +72,10 @@ def create_petition():
         raise CreateRequestException(str(e))
 
 
-def main():
+def main(keyfile):
     try:
-        results = create_petition()
+        keys = load_keys(keyfile)
+        results = create_petition(keys)
 
         print "petition created successfully!"
         print results
@@ -67,8 +85,9 @@ def main():
 
 
 @click.command()
-def cli_main():
-    main()
+@click.option('--keyfile', default='/keys/key.json', help='Seed for key generation')
+def cli_main(keyfile):
+    main(keyfile)
 
 
 if __name__ == '__main__':
