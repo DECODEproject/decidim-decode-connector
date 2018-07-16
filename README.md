@@ -19,6 +19,17 @@ So basically, decode-connector abstracts the ledger and the contracts from the a
 ```bash
 docker-compose build
 ```
+
+### Generate Key
+
+```
+docker-compose run \
+  -v $(pwd):/keys
+  keygen
+```
+
+Now you should have key.json in your working directory.
+
 ### Create petition
 
 

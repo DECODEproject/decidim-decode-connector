@@ -20,3 +20,7 @@ services:
       - DECIDIM_MOCK_URL
     depends_on:
       - tor
+  keygen:
+    build: .
+    image: decidim-decode-connector
+    command: ["python", "keygen.py", "--filename", "/keys/key.json"]
