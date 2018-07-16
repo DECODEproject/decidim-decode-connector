@@ -14,7 +14,7 @@ services:
   close:
     build: .
     image: decidim-decode-connector
-    command: ["python", "close.py", "--seed", "alice"]
+    command: ["python", "close.py"]
     environment:
       - WALLET_PROXY_URL
       - DECIDIM_MOCK_URL
