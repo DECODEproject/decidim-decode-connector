@@ -102,19 +102,19 @@ class CloseTestCase(unittest.TestCase):
 
         self.assertEqual(decidim_mock_url, expected)
 
-#    @responses.activate
-#    @mock.patch.dict(os.environ, {})
-#    def test_main_final_test_its_the_final_countdown(self):
-#        tally_response = {
-#            'yes': 10,
-#            'no': 5
-#        }
-#        responses.add(responses.POST, self.wallet_proxy_tally_url, json=tally_response, status=200)
-#        responses.add(responses.POST, self.decidim_mock_close_url, json={}, status=200)
-#
-#        close.main()
-#
-#        request_sent = responses.calls[1].request
-#
-#        self.assertEqual(len(responses.calls), 2)
-#        self.assertEqual(json.loads(request_sent.body), tally_response)
+    @responses.activate
+    @mock.patch.dict(os.environ, {})
+    def test_main_final_test_its_the_final_countdown(self):
+        tally_response = {
+            'yes': 10,
+            'no': 5
+        }
+        responses.add(responses.POST, self.wallet_proxy_tally_url, json=tally_response, status=200)
+        responses.add(responses.POST, self.decidim_mock_close_url, json={}, status=200)
+
+        close.main('./contrib/key.json')
+
+        request_sent = responses.calls[1].request
+
+        self.assertEqual(len(responses.calls), 2)
+        self.assertEqual(json.loads(request_sent.body), tally_response)
