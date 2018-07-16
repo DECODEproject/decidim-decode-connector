@@ -24,7 +24,7 @@ docker-compose build
 
 ```
 docker-compose run \
-  -v $(pwd):/keys \
+  -v $(pwd)/keys:/keys \
   keygen
 ```
 
@@ -36,7 +36,7 @@ Now you should have key.json in your working directory.
 ```
 docker-compose run \
   -e CHAINSPACE_API_URL=<chainspace_api_url> \
-  -v $(pwd):/keys \
+  -v $(pwd)/keys:/keys \
   create
 ```
 
@@ -46,7 +46,7 @@ docker-compose run \
 docker-compose run \
   -e DECIDIM_MOCK_URL=<decidim_mock_url> \
   -e WALLET_PROXY_URL=<wallet_proxy_url> \
-  -v $(pwd):/keys \
+  -v $(pwd)/keys:/keys \
   close
 ```
 
