@@ -52,7 +52,7 @@
               "command": "sh",
               "arguments": [
                 "-c",
-                "docker-compose run -e -v $(pwd)/contrib:/keys CHAINSPACE_API_URL=${CHAINSPACE_API_URL} create"
+                "docker-compose run -v $(pwd)/contrib:/keys -e CHAINSPACE_API_URL=${CHAINSPACE_API_URL} create"
               ]
             }
           ]
