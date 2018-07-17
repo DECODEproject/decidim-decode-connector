@@ -45,7 +45,7 @@ docker-compose run \
 ```
 docker-compose run \
   -e DECIDIM_MOCK_URL=<decidim_mock_url> \
-  -e WALLET_PROXY_URL=<wallet_proxy_url> \
+  -e CHAINSPACE_API_URL=<chainspace_api_url> \
   -v $(pwd)/keys:/keys \
   close
 ```

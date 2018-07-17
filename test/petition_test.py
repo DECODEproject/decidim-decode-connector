@@ -5,6 +5,7 @@ from src.petition import Petition
 from src.transaction_log import TransactionLog
 from src.exceptions.tally_closed_petition_exception import TallyClosedPetitionException
 from src.exceptions.empty_transaction_log_exception import EmptyTransactionLogException
+from chainspacecontract.examples.utils import pack
 from json import loads
 
 
@@ -61,7 +62,7 @@ class PetitionTest(unittest.TestCase):
 
         output = self.petition.get_results()
 
-        self.contract_mock.tally.assert_called_with(inputs, self.petition.reference_inputs, self.petition.parameters, self.key_pair[0], self.key_pair[1])
+        self.contract_mock.tally.assert_called_with(inputs, self.petition.reference_inputs, self.petition.parameters, pack(self.key_pair[0]), pack(self.key_pair[1]))
         self.chainspace_repository_mock.process_transaction.assert_called_with(tally_petition_transaction)
         self.assertEqual(expected_output, output)
 
@@ -84,7 +85,7 @@ class PetitionTest(unittest.TestCase):
 
         output = self.petition.get_results()
 
-        self.contract_mock.tally.assert_called_with(inputs, self.petition.reference_inputs, self.petition.parameters, self.key_pair[0], self.key_pair[1])
+        self.contract_mock.tally.assert_called_with(inputs, self.petition.reference_inputs, self.petition.parameters, pack(self.key_pair[0]), pack(self.key_pair[1]))
         self.chainspace_repository_mock.process_transaction.assert_called_with(tally_petition_transaction)
         self.assertEqual(expected_output, output)
 

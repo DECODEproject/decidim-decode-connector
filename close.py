@@ -1,10 +1,19 @@
 from os import environ
+from urlparse import urlparse
 import requests
 import json
 import click
 import sys
 
-DEFAULT_WALLET_PROXY_URL = "http://localhost:5010"
+from src.chainspace_client import ChainspaceClient
+from src.chainspace_repository import ChainspaceRepository
+from chainspacecontract.examples import petition_encrypted as petition_contract
+from src.petition import Petition
+from petlib.pack import decode
+from binascii import unhexlify
+
+DEFAULT_CHAINSPACE_API_URL = "http://localhost:5000/api/1.0"
+DEFAULT_TOR_PROXY_URL = "socks5h://localhost:9050"
 DEFAULT_DECIDIM_MOCK_URL = "http://localhost:3040"
 
 
@@ -18,19 +27,16 @@ class CloseRequestException(Exception):
         return 'Failed to close Decidim petition: ' + self.message
 
 
-def load_keys(filename="/keys/key.json"):
-    with open(filename, 'r') as fp:
-        key = json.load(fp)
-
-        pub = key['pub']
-        priv = key['priv']
-        return priv, pub
+def get_chainspace_api_url():
+    if 'CHAINSPACE_API_URL' in environ:
+        return environ['CHAINSPACE_API_URL']
+    return DEFAULT_CHAINSPACE_API_URL
 
 
-def get_wallet_proxy_url():
-    if 'WALLET_PROXY_URL' in environ:
-        return environ['WALLET_PROXY_URL']
-    return DEFAULT_WALLET_PROXY_URL
+def get_tor_proxy_url():
+    if 'TOR_PROXY_URL' in environ:
+        return environ['TOR_PROXY_URL']
+    return DEFAULT_TOR_PROXY_URL
 
 
 def get_decidim_mock_url():
@@ -39,20 +45,45 @@ def get_decidim_mock_url():
     return DEFAULT_DECIDIM_MOCK_URL
 
 
-def request_tally(url, key_pair):
-    (private_key, public_key) = key_pair
+def createChainspaceClient():
+    url = urlparse(get_chainspace_api_url())
+    hostname = url.hostname
+    port = url.port or 5000
+    tor_proxy_url = get_tor_proxy_url()
+    return ChainspaceClient(tor_proxy_url, hostname, port)
+
+
+def unpack(x):
+    return decode(unhexlify(x))
+
+
+def load_keys(filename="/keys/key.json"):
+    with open(filename, 'r') as fp:
+        key = json.load(fp)
+
+        pub = key['pub']
+        priv = key['priv']
+
+        pub = unpack(pub)
+        priv = unpack(priv)
+
+        return priv, pub
+
+
+def petition(key_pair):
+    chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url())
+    return Petition(chainspace_repository, petition_contract, key_pair)
+
+
+def request_tally(key_pair):
     try:
-        response = requests.post(url + '/tally', json={
-            'private_key': private_key,
-            'public_key': public_key
-        })
+        outcome = petition(key_pair).get_results()
+        return {
+            'yes': outcome[0],
+            'no': outcome[1]
+        }
     except Exception as e:
         raise TallyRequestException(str(e))
-
-    if response.status_code >= 400:
-        raise TallyRequestException(response.json()['error'])
-
-    return json.loads(response.content)
 
 
 def decidim_close(url, results):
@@ -66,12 +97,10 @@ def decidim_close(url, results):
 
 
 def main(keyfile):
-    key_pair = load_keys(keyfile)
-    wallet_proxy_url = get_wallet_proxy_url()
-    decidim_mock_url = get_decidim_mock_url()
-
     try:
-        results = request_tally(wallet_proxy_url, key_pair)
+        key_pair = load_keys(keyfile)
+        decidim_mock_url = get_decidim_mock_url()
+        results = request_tally(key_pair)
         decidim_close(decidim_mock_url, results)
 
         print "petition closed successfully!"

@@ -29,8 +29,8 @@ class Petition:
                 inputs,
                 self.reference_inputs,
                 self.parameters,
-                self.private_key,
-                self.public_key
+                pack(self.private_key),
+                pack(self.public_key)
             )
         except Exception as err:
             if str(err) == "'scores'":
