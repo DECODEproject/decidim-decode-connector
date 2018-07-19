@@ -18,4 +18,3 @@ def load_keys(filename="/keys/key.json"):
         priv = unpack(priv)
 
         return priv, pub
-

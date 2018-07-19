@@ -1,17 +1,12 @@
 from os import environ
-from urlparse import urlparse
 import requests
 import click
 import sys
-
-from src.chainspace_client import ChainspaceClient
-from src.chainspace_repository import ChainspaceRepository
-from chainspacecontract.examples import petition_encrypted as petition_contract
-from src.petition import Petition
 from read_keys import load_keys
 from petition_builder import petition
 
 DEFAULT_DECIDIM_MOCK_URL = "http://localhost:3040"
+
 
 class TallyRequestException(Exception):
     def __str__(self):
@@ -27,6 +22,7 @@ def get_decidim_mock_url():
     if 'DECIDIM_MOCK_URL' in environ:
         return environ['DECIDIM_MOCK_URL']
     return DEFAULT_DECIDIM_MOCK_URL
+
 
 def request_tally(key_pair):
     try:

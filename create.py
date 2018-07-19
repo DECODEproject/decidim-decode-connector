@@ -1,7 +1,6 @@
 from urlparse import urlparse
 import click
 import sys
-
 from src.chainspace_client import ChainspaceClient
 from src.chainspace_repository import ChainspaceRepository
 from chainspacecontract.examples import petition_encrypted as petition_contract
@@ -14,6 +13,7 @@ class CreateRequestException(Exception):
     def __str__(self):
         return 'Failed to create petition: ' + self.message
 
+
 def create_petition(key_pair):
     try:
         our_object = petition(key_pair).initialize()
@@ -24,6 +24,7 @@ def create_petition(key_pair):
         return result
     except Exception as e:
         raise CreateRequestException(str(e))
+
 
 def main(keyfile):
     try:
