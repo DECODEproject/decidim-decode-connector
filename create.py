@@ -1,15 +1,13 @@
 from os import environ
 from urlparse import urlparse
 import click
-import json
 import sys
 
 from src.chainspace_client import ChainspaceClient
 from src.chainspace_repository import ChainspaceRepository
 from chainspacecontract.examples import petition_encrypted as petition_contract
 from src.petition import Petition
-from petlib.pack import decode
-from binascii import unhexlify
+from read_keys import load_keys
 
 DEFAULT_CHAINSPACE_API_URL = "http://localhost:5000/api/1.0"
 DEFAULT_TOR_PROXY_URL = "socks5h://localhost:9050"
@@ -40,31 +38,14 @@ def createChainspaceClient():
     return ChainspaceClient(tor_proxy_url, hostname, port)
 
 
-def unpack(x):
-    return decode(unhexlify(x))
-
-
-def load_keys(filename="/keys/key.json"):
-    with open(filename, 'r') as fp:
-        key = json.load(fp)
-
-        pub = key['pub']
-        priv = key['priv']
-
-        pub = unpack(pub)
-        priv = unpack(priv)
-
-        return priv, pub
-
-
-def petition(keys):
+def petition(key_pair):
     chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url())
-    return Petition(chainspace_repository, petition_contract, keys)
+    return Petition(chainspace_repository, petition_contract, key_pair)
 
 
-def create_petition(keys):
+def create_petition(key_pair):
     try:
-        our_object = petition(keys).initialize()
+        our_object = petition(key_pair).initialize()
 
         petitionObjectID = our_object.object_id
         result = {'petitionObjectId': petitionObjectID}
