@@ -6,7 +6,7 @@ from src.petition import Petition
 from urlparse import urlparse
 
 DEFAULT_CHAINSPACE_API_URL = "http://localhost:5000/api/1.0"
-DEFAULT_TOR_PROXY_URL = "socks5h://localhost:9050"
+DEFAULT_TOR_PROXY_URL = None
 
 
 def get_chainspace_api_url():

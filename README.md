@@ -67,3 +67,31 @@ docker run -ti \
   -e PYTHONPATH=/code \
   decidim-decode-connector py.test --ignore chainspacecontract
 ```
+
+### Using with local chainspace
+
+1. Create a docker chainspace image
+```
+cd CHAINSPACE;
+docker build -t chainspace .
+```
+2.  Run chainspace image
+```
+docker run --name chainspace -d -p 5000:5000 chainspace
+```
+
+3. Modify the docker `docker-compose.yml` on the commands you want to use
+```
+  create:
+    ...
+    external_links:
+    - chainspace:chainspace
+    network_mode: bridge
+```
+4. Remove from `docker-compose.yml` all `TOR_PROXY_URL` lines
+
+5. call the method
+
+```
+docker-compose -e chainspace:5000/api/1.0 -v $(pwd)/keys:/keys create
+```
