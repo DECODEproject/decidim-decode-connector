@@ -88,10 +88,21 @@ docker run --name chainspace -d -p 5000:5000 chainspace
     - chainspace:chainspace
     network_mode: bridge
 ```
+
+OR
+
+```
+  close:
+    ...
+    external_links:
+    - chainspace:chainspace
+    network_mode: bridge
+```
+
 4. Remove from `docker-compose.yml` all `TOR_PROXY_URL` lines
 
 5. call the method
 
 ```
-docker-compose -e chainspace:5000/api/1.0 -v $(pwd)/keys:/keys create
+docker-compose run -e CHAINSPACE_API_URL=http://chainspace:5000/api/1.0 -v $(pwd)/contrib:/keys create
 ```
