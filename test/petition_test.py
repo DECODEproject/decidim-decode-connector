@@ -110,3 +110,16 @@ class PetitionTest(unittest.TestCase):
 
         with self.assertRaises(TallyClosedPetitionException):
             self.petition.get_results()
+
+    def test_count_signatures_with_new_petition_returns_count_zero(self):
+        no_signatures_transaction_log = loads("""[
+            {"transactionJson":{"methodID":"init","inputIDs":[],"outputs":["petition_token"],"contractID":"petition_encrypted"},"timestamp":"2018-04-20 10:57:09.117"},
+            {"transactionJson":{"methodID":"create_petition","inputIDs":["input_id_for_create_petition"],"outputs":["petition_token","new_petition_object"],"contractID":"petition_encrypted"},"timestamp":"2018-04-20 10:57:09.653"}
+        ]""")
+        self.chainspace_repository_mock.get_full_transaction_log.return_value = TransactionLog(no_signatures_transaction_log)
+        self.contract_mock.contract.contract_name = 'petition_encrypted'
+
+        output = self.petition.count_signatures()
+
+        expected_output = 0
+        self.assertEqual(expected_output, output)

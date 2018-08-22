@@ -21,6 +21,9 @@ class Petition:
         new_petition_object = self.__create_petition(petition_token)
         return new_petition_object
 
+    def count_signatures(self):
+        return 0
+
     def get_results(self):
         inputs = [self.__get_chainspace_objects_of_last_transaction()[-1]]
 
