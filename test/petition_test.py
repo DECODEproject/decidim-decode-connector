@@ -139,3 +139,20 @@ class PetitionTest(unittest.TestCase):
 
         expected_output = 3
         self.assertEqual(expected_output, output)
+
+    def test_count_signatures_with_closed_petition_returns_correct_count(self):
+        closed_petition_transaction_log = loads("""[
+            {"transactionJson":{"methodID":"init","inputIDs":[],"outputs":["petition_token"],"contractID":"petition_encrypted"},"timestamp":"2018-04-20 10:57:09.117"},
+            {"transactionJson":{"methodID":"create_petition","inputIDs":["input_id_for_create_petition"],"outputs":["petition_token","new_petition_object"],"contractID":"petition_encrypted"},"timestamp":"2018-04-20 10:57:09.653"},
+            {"transactionJson":{"methodID":"add_signature","parameters":["[0,1,0,0,0,0]"],"inputIDs":["input_id_for_add_signature"],"outputs":[],"contractID":"petition_encrypted"},"timestamp":"2018-04-20 10:58:09.653"},
+            {"transactionJson":{"methodID":"add_signature","parameters":["[1,0,0,0,0,0]"],"inputIDs":["input_id_for_add_signature"],"outputs":[],"contractID":"petition_encrypted"},"timestamp":"2018-04-20 10:58:19.653"},
+            {"transactionJson":{"methodID":"add_signature","parameters":["[0,0,0,0,1,0]"],"inputIDs":["input_id_for_add_signature"],"outputs":[],"contractID":"petition_encrypted"},"timestamp":"2018-04-20 10:58:29.653"},
+            {"transactionJson":{"methodID":"tally","inputIDs":["input_id_for_tally"],"outputs":["outcome"],"contractID":"petition_encrypted"},"timestamp":"2018-04-20 10:59:09.653"}
+        ]""")
+        self.chainspace_repository_mock.get_full_transaction_log.return_value = TransactionLog(closed_petition_transaction_log)
+        self.contract_mock.contract.contract_name = 'petition_encrypted'
+
+        output = self.petition.count_signatures()
+
+        expected_output = 3
+        self.assertEqual(expected_output, output)
