@@ -22,7 +22,16 @@ class Petition:
         return new_petition_object
 
     def count_signatures(self):
-        return 0
+        contract_name = self.contract.contract.contract_name
+
+        transaction_log = self.chainspace_repository.get_full_transaction_log()
+        contract_transactions = transaction_log.filter_by_contract_name(contract_name)
+        add_signature_transactions = filter(
+            lambda transaction: transaction['transactionJson']['methodID'] == 'add_signature',
+            contract_transactions
+        )
+
+        return len(add_signature_transactions)
 
     def get_results(self):
         inputs = [self.__get_chainspace_objects_of_last_transaction()[-1]]
