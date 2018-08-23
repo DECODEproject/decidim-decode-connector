@@ -16,3 +16,12 @@ class CountTestCase(unittest.TestCase):
         actual = count.count_signatures()
 
         self.assertEqual(actual, {'numberOfSignatures': 3})
+
+    @mock.patch('count.petition')
+    def test_count_petition_raises_exception_if_error_counting(self, petition_func_mock):
+        petition_mock = mock.Mock()
+        petition_mock.count_signatures.side_effect = Exception('')
+        petition_func_mock.return_value = petition_mock
+
+        with self.assertRaises(count.CountRequestException):
+            actual = count.count_signatures()
