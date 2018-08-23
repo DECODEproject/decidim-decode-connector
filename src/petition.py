@@ -26,10 +26,7 @@ class Petition:
 
         transaction_log = self.chainspace_repository.get_full_transaction_log()
         contract_transactions = transaction_log.filter_by_contract_name(contract_name)
-        add_signature_transactions = filter(
-            lambda transaction: transaction['transactionJson']['methodID'] == 'add_signature',
-            contract_transactions
-        )
+        add_signature_transactions = contract_transactions.filter_by_method_name('add_signature')
 
         return len(add_signature_transactions)
 

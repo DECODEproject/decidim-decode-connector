@@ -13,6 +13,14 @@ class TransactionLog(list):
 
         return self.__class__(filtered_transaction_log)
 
+    def filter_by_method_name(self, method_name):
+        filtered_transaction_log = filter(
+            lambda transaction: transaction['transactionJson']['methodID'] == method_name,
+            self
+        )
+
+        return self.__class__(filtered_transaction_log)
+
     def get_last_transaction(self):
         if not len(self):
             raise EmptyTransactionLogException()
