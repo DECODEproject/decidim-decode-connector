@@ -1,3 +1,5 @@
+import click
+import sys
 from petition_builder import petition
 
 
@@ -13,3 +15,23 @@ def count_signatures():
         return {'numberOfSignatures': number_of_signatures}
     except Exception as e:
         raise CountRequestException(str(e))
+
+
+def main():
+    try:
+        results = count_signatures()
+
+        print "petition signatures counted successfully!"
+        print results
+    except Exception as err:
+        print err
+        sys.exit(-1)
+
+
+@click.command()
+def cli_main():
+    main()
+
+
+if __name__ == '__main__':
+    cli_main()

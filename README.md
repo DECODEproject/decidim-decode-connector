@@ -40,6 +40,14 @@ docker-compose run \
   create
 ```
 
+### Count signatures
+
+```
+docker-compose run \
+  -e CHAINSPACE_API_URL=<chainspace_api_url> \
+  count
+```
+
 ### Close petition
 
 ```
