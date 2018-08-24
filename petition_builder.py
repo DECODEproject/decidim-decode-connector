@@ -29,6 +29,6 @@ def createChainspaceClient():
     return ChainspaceClient(tor_proxy_url, hostname, port)
 
 
-def petition(key_pair):
+def petition(key_pair=(None, None)):
     chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url())
     return Petition(chainspace_repository, petition_contract, key_pair)

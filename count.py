@@ -10,7 +10,7 @@ class CountRequestException(Exception):
 
 def count_signatures():
     try:
-        number_of_signatures = petition(('', '')).count_signatures()
+        number_of_signatures = petition().count_signatures()
 
         return {'numberOfSignatures': number_of_signatures}
     except Exception as e:
