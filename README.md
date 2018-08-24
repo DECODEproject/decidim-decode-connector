@@ -9,108 +9,84 @@ So basically, decode-connector abstracts the ledger and the contracts from the a
 ## How to use
 
 
-
 ### Requirements
 
 1. Install docker
 2. Install docker-compose
-3. Build the docker images
-
-```bash
-docker-compose build
+3. Build the docker images with the following command:
+```
+make build
+```
+4. Generate a key pair in `keys/key.json` with the following command:
+```
+make keygen
 ```
 
-### Generate Key
 
+### Petition commands
+
+The following are the commands used for petitions management. If no parameters are specified, by default it will use the settings for the local environment
+
+To create a petition:
 ```
-docker-compose run \
-  -v $(pwd)/keys:/keys \
-  keygen
-```
-
-Now you should have key.json in your working directory.
-
-### Create petition
-
-
-```
-docker-compose run \
-  -e CHAINSPACE_API_URL=<chainspace_api_url> \
-  -v $(pwd)/keys:/keys \
-  create
+make create \
+  [tor=true] \
+  [CHAINSPACE_API_URL=<chainspace_api_url>]
 ```
 
-### Count signatures
-
+To get a count of the total signatures for an ongoing or closed petition:
 ```
-docker-compose run \
-  -e CHAINSPACE_API_URL=<chainspace_api_url> \
-  count
-```
-
-### Close petition
-
-```
-docker-compose run \
-  -e DECIDIM_MOCK_URL=<decidim_mock_url> \
-  -e CHAINSPACE_API_URL=<chainspace_api_url> \
-  -v $(pwd)/keys:/keys \
-  close
+make count \
+  [tor=true] \
+  [CHAINSPACE_API_URL=<chainspace_api_url>]
 ```
 
-### Run linter
-
+To close a petition:
 ```
-docker run -ti \
-  -v $(pwd):/code \
-  decidim-decode-connector:latest \
-  pycodestyle --exclude='chainspacecontract/' --ignore=E501 .
-```
-
-### Run tests
-
-```
-docker run -ti \
-  -v $(pwd):/code \
-  -e PYTHONPATH=/code \
-  decidim-decode-connector py.test --ignore chainspacecontract
+make close \
+  [tor=true] \
+  [CHAINSPACE_API_URL=<chainspace_api_url>] \
+  [DECIDIM_MOCK_URL=<decidim_mock_url>]
 ```
 
-### Using with local chainspace
 
-1. Create a docker chainspace image
+### Development commands
+
+Run linter:
+```
+make lint
+```
+
+Run tests:
+```
+make test
+```
+
+Watch files and run tests on change:
+```
+make test/watch
+```
+
+### Using with local Chainspace
+
+1. Create a docker Chainspace image
 ```
 cd CHAINSPACE;
 docker build -t chainspace .
 ```
-2.  Run chainspace image
+2. Run chainspace image
 ```
-docker run --name chainspace -d -p 5000:5000 chainspace
+docker run --rm --name chainspace -d -p 5000:5000 chainspace
 ```
-
-3. Modify the docker `docker-compose.yml` on the commands you want to use
+3. Run commands without parameters, for example:
 ```
-  create:
-    ...
-    external_links:
-    - chainspace:chainspace
-    network_mode: bridge
+make create
 ```
 
-OR
 
+### Stopping services
+
+After running any commands, you can stop any remaining containers by running:
 ```
-  close:
-    ...
-    external_links:
-    - chainspace:chainspace
-    network_mode: bridge
-```
-
-4. Remove from `docker-compose.yml` all `TOR_PROXY_URL` lines
-
-5. call the method
-
-```
-docker-compose run -e CHAINSPACE_API_URL=http://chainspace:5000/api/1.0 -v $(pwd)/contrib:/keys create
+make stop
 ```

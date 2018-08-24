@@ -1,0 +1,20 @@
+version: '3'
+services:
+  create:
+    environment:
+      - TOR_PROXY_URL=
+    external_links:
+    - chainspace:chainspace
+    network_mode: bridge
+  count:
+    environment:
+      - TOR_PROXY_URL=
+    external_links:
+    - chainspace:chainspace
+    network_mode: bridge
+  close:
+    environment:
+      - TOR_PROXY_URL=
+    external_links:
+    - chainspace:chainspace
+    network_mode: bridge
