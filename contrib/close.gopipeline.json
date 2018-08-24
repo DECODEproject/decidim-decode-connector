@@ -44,7 +44,7 @@
               "type": "exec",
               "run_if": "passed",
               "on_cancel" : null,
-              "command": "docker-compose",
+              "command": "make",
               "arguments": [
                 "build"
               ]
@@ -56,7 +56,12 @@
               "command": "sh",
               "arguments": [
                 "-c",
-                "docker-compose run -v $(pwd)/contrib:/keys -e DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL} -e CHAINSPACE_API_URL=${CHAINSPACE_API_URL}  close"
+                "make",
+                "close",
+                "tor=true",
+                "ci=true",
+                "CHAINSPACE_API_URL=${CHAINSPACE_API_URL}",
+                "DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL}"
               ]
             }
           ]

@@ -10,6 +10,12 @@ ifdef tor
 	base-config = -f docker-compose.yml
 endif
 
+ifdef ci
+	keys_folder = contrib
+else
+	keys_folder = keys
+endif
+
 define dc-run
 	docker-compose $(base-config) run --rm
 endef
@@ -27,13 +33,13 @@ stop:
 
 keygen:
 	$(dc-run) \
-		-v $(shell pwd)/keys:/keys \
+		-v $(shell pwd)/$(keys_folder):/keys \
 		keygen
 
 
 create:
 	$(dc-run) \
-		-v $(shell pwd)/keys:/keys \
+		-v $(shell pwd)/$(keys_folder):/keys \
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
 		create
 
@@ -44,7 +50,7 @@ count:
 
 close:
 	$(dc-run) \
-		-v $(shell pwd)/keys:/keys \
+		-v $(shell pwd)/$(keys_folder):/keys \
 		-e DECIDIM_MOCK_URL=$(DECIDIM_MOCK_URL) \
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
 		close
