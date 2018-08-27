@@ -90,3 +90,8 @@ After running any commands, you can stop any remaining containers by running:
 ```
 make stop
 ```
+
+If you were using the local Chainspace container, run:
+```
+docker stop chainspace
+```
