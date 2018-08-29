@@ -57,19 +57,19 @@ close:
 
 
 lint:
-	-$(d-run) \
+	$(d-run) \
 		-v $(shell pwd):/code \
 		decidim-decode-connector:latest \
 		pycodestyle --exclude='chainspacecontract/' --ignore=E501 .
 
 test:
-	-$(d-run) \
+	$(d-run) \
 		-v $(shell pwd):/code \
 		-e PYTHONPATH=/code \
 		decidim-decode-connector py.test --ignore chainspacecontract
 
 test/watch:
-	-$(d-run) \
+	$(d-run) \
 		-v $(shell pwd):/code \
 		-e PYTHONPATH=/code \
 		decidim-decode-connector ptw --ignore chainspacecontract
