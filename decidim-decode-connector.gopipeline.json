@@ -30,41 +30,27 @@
               "type": "exec",
               "run_if": "passed",
               "on_cancel" : null,
-              "command": "docker",
+              "command": "make",
               "arguments": [
-                "build",
-                "-t",
-                "decidim-decode-connector",
-                "."
+                "ci/build"
               ]
             },
             {
               "type": "exec",
               "run_if": "passed",
               "on_cancel" : null,
-              "command": "docker",
+              "command": "make",
               "arguments": [
-                "run",
-                "decidim-decode-connector",
-                "pycodestyle",
-                "--exclude=chainspacecontract/",
-                "--ignore=E501",
-                "."
+                "ci/lint"
               ]
             },
             {
               "type": "exec",
               "run_if": "passed",
               "on_cancel" : null,
-              "command": "docker",
+              "command": "make",
               "arguments": [
-                "run",
-                "-e",
-                "PYTHONPATH=/code",
-                "decidim-decode-connector",
-                "py.test",
-                "--ignore",
-                "chainspacecontract"
+                "ci/test"
               ]
             }
           ]

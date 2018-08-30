@@ -10,7 +10,7 @@ ifdef tor
 	base-config = -f docker-compose.yml
 endif
 
-ifdef ci
+ifdef ci_keys
 	keys_folder = contrib
 else
 	keys_folder = keys
@@ -59,17 +59,34 @@ close:
 lint:
 	$(d-run) \
 		-v $(shell pwd):/code \
-		decidim-decode-connector:latest \
+		decidim-decode-connector \
 		pycodestyle --exclude='chainspacecontract/' --ignore=E501 .
 
 test:
 	$(d-run) \
 		-v $(shell pwd):/code \
 		-e PYTHONPATH=/code \
-		decidim-decode-connector py.test --ignore chainspacecontract
+		decidim-decode-connector \
+		py.test --ignore chainspacecontract
 
 test/watch:
 	$(d-run) \
 		-v $(shell pwd):/code \
 		-e PYTHONPATH=/code \
-		decidim-decode-connector ptw --ignore chainspacecontract
+		decidim-decode-connector \
+		ptw --ignore chainspacecontract
+
+
+ci/build:
+	docker build -t decidim-decode-connector .
+
+ci/lint:
+	docker run --rm \
+		decidim-decode-connector \
+		pycodestyle --exclude='chainspacecontract/' --ignore=E501 .
+
+ci/test:
+	docker run --rm \
+		-e PYTHONPATH=/code \
+		decidim-decode-connector \
+		py.test --ignore chainspacecontract

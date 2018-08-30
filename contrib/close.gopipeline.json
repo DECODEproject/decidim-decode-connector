@@ -56,7 +56,7 @@
               "command": "sh",
               "arguments": [
                 "-c",
-                "make close tor=true ci=true CHAINSPACE_API_URL=${CHAINSPACE_API_URL} DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL}"
+                "make close tor=true ci_keys=true CHAINSPACE_API_URL=${CHAINSPACE_API_URL} DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL}"
               ]
             },
             {
