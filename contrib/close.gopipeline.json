@@ -58,6 +58,15 @@
                 "-c",
                 "make close tor=true ci=true CHAINSPACE_API_URL=${CHAINSPACE_API_URL} DECIDIM_MOCK_URL=${DECIDIM_MOCK_URL}"
               ]
+            },
+            {
+              "type": "exec",
+              "run_if": "passed",
+              "on_cancel" : null,
+              "command": "make",
+              "arguments": [
+                "stop"
+              ]
             }
           ]
         }
