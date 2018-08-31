@@ -17,6 +17,30 @@ class ZenroomPetition:
         new_petition_object = self.__create_petition(petition_token)
         return new_petition_object
 
+    def get_results(self):
+        inputs = [self.__get_chainspace_objects_of_last_transaction()[-1]]
+
+        try:
+            transaction = self.contract.tally(
+                inputs,
+                self.reference_inputs,
+                self.parameters,
+                self.keyfile
+            )
+        except Exception as err:
+            if str(err) == "'scores'":
+                raise TallyClosedPetitionException()
+            raise
+
+        self.chainspace_repository.process_transaction(transaction)
+
+        outcome = json.loads(transaction['transaction']['outputs'][0])['outcome']
+
+        result_yes = reduce((lambda x, y: x + y), outcome[:len(outcome) / 2])
+        result_no = reduce((lambda x, y: x + y), outcome[len(outcome) / 2:])
+
+        return [result_yes, result_no]
+
     def __initialize_contract(self):
         transaction = self.contract.init()
         self.chainspace_repository.process_transaction(transaction)
@@ -40,3 +64,11 @@ class ZenroomPetition:
         )
         self.chainspace_repository.process_transaction(transaction)
         return transaction['transaction']['outputs'][1]
+
+    def __get_chainspace_objects_of_last_transaction(self):
+        contract_name = self.contract.contract.contract_name
+
+        transaction_log = self.chainspace_repository.get_full_transaction_log()
+        contract_transactions = transaction_log.filter_by_contract_name(contract_name)
+        last_transaction = contract_transactions.get_last_transaction()
+        return last_transaction.extract_chainspace_objects()

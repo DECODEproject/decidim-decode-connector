@@ -66,6 +66,13 @@ close:
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
 		close
 
+close-zenroom:
+	$(dc-run) \
+		-v $(shell pwd)/$(keys_folder):/keys \
+		-e DECIDIM_MOCK_URL=$(DECIDIM_MOCK_URL) \
+		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
+		close python close.py --zenroom
+
 
 lint:
 	$(d-run) \

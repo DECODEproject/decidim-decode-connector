@@ -3,7 +3,7 @@ import requests
 import click
 import sys
 from read_keys import load_keys
-from petition_builder import petition
+from petition_builder import petition, zenroom_petition
 
 DEFAULT_DECIDIM_MOCK_URL = "http://localhost:3040"
 
@@ -24,9 +24,13 @@ def get_decidim_mock_url():
     return DEFAULT_DECIDIM_MOCK_URL
 
 
-def request_tally(key_pair):
+def request_tally(key_pair, use_zenroom):
     try:
-        outcome = petition(key_pair).get_results()
+        if use_zenroom:
+            outcome = zenroom_petition(key_pair).get_results()
+        else:
+            outcome = petition(key_pair).get_results()
+
         return {
             'yes': outcome[0],
             'no': outcome[1]
@@ -45,11 +49,16 @@ def decidim_close(url, results):
         raise CloseRequestException(response.text)
 
 
-def main(keyfile):
+def main(keyfile, use_zenroom):
     try:
-        key_pair = load_keys(keyfile)
         decidim_mock_url = get_decidim_mock_url()
-        results = request_tally(key_pair)
+
+        if use_zenroom:
+            results = request_tally(keyfile, use_zenroom)
+        else:
+            key_pair = load_keys(keyfile)
+            results = request_tally(key_pair, use_zenroom)
+
         decidim_close(decidim_mock_url, results)
 
         print "petition closed successfully!"
@@ -61,8 +70,9 @@ def main(keyfile):
 
 @click.command()
 @click.option('--keyfile', default='/keys/key.json', help='Seed for key generation')
-def cli_main(keyfile):
-    main(keyfile)
+@click.option('--zenroom/--no-zenroom', default=False)
+def cli_main(keyfile, zenroom):
+    main(keyfile, zenroom)
 
 
 if __name__ == '__main__':
