@@ -48,6 +48,12 @@ create:
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
 		create
 
+create-zenroom:
+	$(dc-run) \
+		-v $(shell pwd)/$(keys_folder):/keys \
+		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
+		create python create.py --zenroom
+
 count:
 	$(dc-run) \
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \

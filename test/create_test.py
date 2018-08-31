@@ -18,7 +18,7 @@ class CreateTestCase(unittest.TestCase):
         petition_mock.initialize.return_value = mock.Mock(object_id='111')
         petition_func_mock.return_value = petition_mock
 
-        actual = create.create_petition((('priv_key', 'pub_key')))
+        actual = create.create_petition(('priv_key', 'pub_key'), False)
 
         self.assertEqual(actual, {'petitionObjectId': '111'})
 
@@ -29,4 +29,23 @@ class CreateTestCase(unittest.TestCase):
         petition_func_mock.return_value = petition_mock
 
         with self.assertRaises(create.CreateRequestException):
-            actual = create.create_petition(('priv_key', 'pub_key'))
+            actual = create.create_petition(('priv_key', 'pub_key'), False)
+
+    @mock.patch('create.zenroom_petition')
+    def test_create_petition_returns_petition_object_id(self, petition_func_mock):
+        petition_mock = mock.Mock()
+        petition_mock.initialize.return_value = mock.Mock(object_id='111')
+        petition_func_mock.return_value = petition_mock
+
+        actual = create.create_petition('my_key_path.json', True)
+
+        self.assertEqual(actual, {'petitionObjectId': '111'})
+
+    @mock.patch('create.zenroom_petition')
+    def test_create_petition_raises_exception_if_error_initializing(self, petition_func_mock):
+        petition_mock = mock.Mock()
+        petition_mock.initialize.side_effect = Exception('')
+        petition_func_mock.return_value = petition_mock
+
+        with self.assertRaises(create.CreateRequestException):
+            actual = create.create_petition('my_key_path.json', True)

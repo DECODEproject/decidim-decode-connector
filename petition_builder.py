@@ -2,7 +2,9 @@ from os import environ
 from src.chainspace_client import ChainspaceClient
 from src.chainspace_repository import ChainspaceRepository
 from chainspacecontract.examples import petition_encrypted as petition_contract
+from chainspacecontract.examples import zenroom_petition as zenroom_contract
 from src.petition import Petition
+from src.zenroom_petition import ZenroomPetition
 from urlparse import urlparse
 
 DEFAULT_CHAINSPACE_API_URL = "http://localhost:5000/api/1.0"
@@ -32,3 +34,8 @@ def createChainspaceClient():
 def petition(key_pair=(None, None)):
     chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url())
     return Petition(chainspace_repository, petition_contract, key_pair)
+
+
+def zenroom_petition(keyfile):
+    chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url())
+    return ZenroomPetition(chainspace_repository, zenroom_contract, keyfile)
