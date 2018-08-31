@@ -36,6 +36,11 @@ keygen:
 		-v $(shell pwd)/$(keys_folder):/keys \
 		keygen
 
+keygen-zenroom:
+	$(dc-run) \
+		-v $(shell pwd)/$(keys_folder):/keys \
+		keygen-zenroom
+
 
 create:
 	$(dc-run) \
