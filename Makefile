@@ -59,6 +59,11 @@ count:
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
 		count
 
+count-zenroom:
+	$(dc-run) \
+		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
+		count python count.py --zenroom
+
 close:
 	$(dc-run) \
 		-v $(shell pwd)/$(keys_folder):/keys \

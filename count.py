@@ -1,6 +1,6 @@
 import click
 import sys
-from petition_builder import petition
+from petition_builder import petition, zenroom_petition
 
 
 class CountRequestException(Exception):
@@ -8,18 +8,21 @@ class CountRequestException(Exception):
         return 'Failed to count signatures: ' + self.message
 
 
-def count_signatures():
+def count_signatures(use_zenroom):
     try:
-        number_of_signatures = petition().count_signatures()
+        if use_zenroom:
+            number_of_signatures = zenroom_petition().count_signatures()
+        else:
+            number_of_signatures = petition().count_signatures()
 
         return {'numberOfSignatures': number_of_signatures}
     except Exception as e:
         raise CountRequestException(str(e))
 
 
-def main():
+def main(use_zenroom):
     try:
-        results = count_signatures()
+        results = count_signatures(use_zenroom)
 
         print "petition signatures counted successfully!"
         print results
@@ -29,8 +32,9 @@ def main():
 
 
 @click.command()
-def cli_main():
-    main()
+@click.option('--zenroom/--no-zenroom', default=False)
+def cli_main(zenroom):
+    main(zenroom)
 
 
 if __name__ == '__main__':

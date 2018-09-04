@@ -36,6 +36,6 @@ def petition(key_pair=(None, None)):
     return Petition(chainspace_repository, petition_contract, key_pair)
 
 
-def zenroom_petition(keyfile):
+def zenroom_petition(keyfile=None):
     chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url())
     return ZenroomPetition(chainspace_repository, zenroom_contract, keyfile)
