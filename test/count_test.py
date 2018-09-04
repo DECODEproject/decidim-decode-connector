@@ -38,7 +38,6 @@ class CountTestCase(unittest.TestCase):
 
         self.assertEqual(actual, {'numberOfSignatures': 3})
 
-
     @mock.patch('count.zenroom_petition')
     def test_count_zenroom_petition_raises_exception_if_error_counting(self, petition_func_mock):
         petition_mock = mock.Mock()
