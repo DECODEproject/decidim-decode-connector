@@ -11,42 +11,158 @@ So basically, decode-connector abstracts the ledger and the contracts from the a
 
 ### Requirements
 
-1. Install docker
-2. Install docker-compose
-3. Build the docker images with the following command:
+- Install docker
+- Install docker-compose
+
+#### In order to run locally
+
+Have a local copy of the Chainspace repository in the `xplore` branch. For example:
+```
+RUN git clone \
+    --single-branch --branch xplore \
+    https://github.com/chainspace/chainspace.git
+```
+
+Create and run a Docker Chainspace image:
+```
+cd CHAINSPACE_REPO_PATH
+docker build -t chainspace .
+docker run -ti --rm --name chainspace -p 5000:5000 chainspace
+```
+
+You can use `Ctrl+C` to stop the local Chainspace when you are done running petition commands.
+
+
+### Set up
+
+Build the docker images with the following command:
 ```
 make build
 ```
-4. Generate a key pair in `keys/key.json` with the following command:
+
+
+### Clean up
+
+All petition commands create a TOR container. If you want to stop it AFTER executing a command, you can run:
+```
+make stop
+```
+
+
+## Petition flows
+
+### Local (development)
+
+If no parameters are specified when running petition commands, by default it will use the settings for the local environment.
+
+1. Generate a key pair in `keys/key.json` with the following command:
 ```
 make keygen
 ```
 
+2. Create petition in local Chainspace
+```
+make create
+```
 
-### Petition commands
+3. Count current number of signatures in local Chainspace
+```
+make count
+```
 
-The following are the commands used for petitions management. If no parameters are specified, by default it will use the settings for the local environment
+4. Close petition in local Chainspace
+```
+make close
+```
 
-To create a petition:
+### Using boxes
+
+In order to run the petition commands in the boxes, make sure to provide the `tor=true` parameter and the actual URLs.
+
+1. Generate a key pair in `keys/key.json` with the following command:
+```
+make keygen
+```
+
+2. Create petition in boxes
 ```
 make create \
-  [tor=true] \
-  [CHAINSPACE_API_URL=<chainspace_api_url>]
+  tor=true \
+  CHAINSPACE_API_URL=<chainspace_api_url>
 ```
 
-To get a count of the total signatures for an ongoing or closed petition:
+3. Count current number of signatures in boxes
 ```
 make count \
-  [tor=true] \
-  [CHAINSPACE_API_URL=<chainspace_api_url>]
+  tor=true \
+  CHAINSPACE_API_URL=<chainspace_api_url>
 ```
 
-To close a petition:
+4. Close petition in boxes
 ```
 make close \
-  [tor=true] \
-  [CHAINSPACE_API_URL=<chainspace_api_url>] \
-  [DECIDIM_MOCK_URL=<decidim_mock_url>]
+  tor=true \
+  CHAINSPACE_API_URL=<chainspace_api_url> \
+  DECIDIM_MOCK_URL=<decidim_mock_url>
+```
+
+
+
+## Zenroom Petition flows
+
+### Local (development)
+
+If no parameters are specified when running petition commands, by default it will use the settings for the local environment.
+
+1. Generate a key pair in `keys/key.json` with the following command:
+```
+make keygen-zenroom
+```
+
+2. Create petition in local Chainspace
+```
+make create-zenroom
+```
+
+3. Count current number of signatures in local Chainspace
+```
+make count-zenroom
+```
+
+4. Close petition in local Chainspace
+```
+make close-zenroom
+```
+
+### Using boxes
+
+In order to run the petition commands in the boxes, make sure to provide the `tor=true` parameter and the actual URLs.
+
+1. Generate a key pair in `keys/key.json` with the following command:
+```
+make keygen-zenroom
+```
+
+2. Create petition in boxes
+```
+make create-zenroom \
+  tor=true \
+  CHAINSPACE_API_URL=<chainspace_api_url>
+```
+
+3. Count current number of signatures in boxes
+```
+make count-zenroom \
+  tor=true \
+  CHAINSPACE_API_URL=<chainspace_api_url>
+```
+
+4. Close petition in boxes
+```
+make close-zenroom \
+  tor=true \
+  CHAINSPACE_API_URL=<chainspace_api_url> \
+  DECIDIM_MOCK_URL=<decidim_mock_url>
 ```
 
 
@@ -65,33 +181,4 @@ make test
 Watch files and run tests on change:
 ```
 make test/watch
-```
-
-### Using with local Chainspace
-
-1. Create a docker Chainspace image
-```
-cd CHAINSPACE;
-docker build -t chainspace .
-```
-2. Run chainspace image
-```
-docker run --rm --name chainspace -d -p 5000:5000 chainspace
-```
-3. Run commands without parameters, for example:
-```
-make create
-```
-
-
-### Stopping services
-
-After running any commands, you can stop any remaining containers by running:
-```
-make stop
-```
-
-If you were using the local Chainspace container, run:
-```
-docker stop chainspace
 ```
