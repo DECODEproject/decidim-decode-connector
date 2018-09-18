@@ -1,6 +1,6 @@
 FROM alpine:3.6
 
-ARG zenroom_tag=v0.7.1
+ARG zenroom_tag=master
 
 WORKDIR /code/zenroom
 
