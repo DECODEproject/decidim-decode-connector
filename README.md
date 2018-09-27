@@ -18,9 +18,9 @@ So basically, decode-connector abstracts the ledger and the contracts from the a
 
 Have a local copy of the Chainspace repository in the `xplore` branch. For example:
 ```
-RUN git clone \
+git clone \
     --single-branch --branch xplore \
-    https://github.com/chainspace/chainspace.git
+    https://github.com/DECODEproject/chainspace.git
 ```
 
 Create and run a Docker Chainspace image:
