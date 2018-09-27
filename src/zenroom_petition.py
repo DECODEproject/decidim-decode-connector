@@ -62,7 +62,6 @@ class ZenroomPetition:
         gender = ['ANY', 'M', 'F', 'U']
         age = ['ANY', '0-19', '20-29', '30-39', '40+']
         options = ["%s-%s-%s" % (v, g, a) for v in votes for g in gender for a in age]
-        options = ["NO-ANY-ANY", "YES-ANY-ANY"]
 
         transaction = self.contract.create_petition(
             inputs,
