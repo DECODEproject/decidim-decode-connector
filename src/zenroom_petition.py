@@ -59,8 +59,8 @@ class ZenroomPetition:
         inputs = (petition_token,)
 
         votes = ['YES', 'NO']
-        gender = ['ANY']#, 'M', 'F', 'U']
-        age = ['ANY']#, '0-19', '20-29', '30-39', '40+']
+        gender = ['ANY']  # , 'M', 'F', 'U']
+        age = ['ANY']  # , '0-19', '20-29', '30-39', '40+']
         district = ['ANY', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
         options = ["%s-%s-%s-%s" % (v, g, a, d) for v in votes for g in gender for a in age for d in district]
 
