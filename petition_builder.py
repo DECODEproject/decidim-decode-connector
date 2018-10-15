@@ -1,9 +1,7 @@
 from os import environ
 from src.chainspace_client import ChainspaceClient
 from src.chainspace_repository import ChainspaceRepository
-from chainspacecontract.examples import petition_encrypted as petition_contract
 from chainspacecontract.examples import zenroom_petition as zenroom_contract
-from src.petition import Petition
 from src.zenroom_petition import ZenroomPetition
 from urlparse import urlparse
 
@@ -29,11 +27,6 @@ def createChainspaceClient():
     port = url.port or 5000
     tor_proxy_url = get_tor_proxy_url()
     return ChainspaceClient(tor_proxy_url, hostname, port)
-
-
-def petition(key_pair=(None, None)):
-    chainspace_repository = ChainspaceRepository(createChainspaceClient(), get_chainspace_api_url())
-    return Petition(chainspace_repository, petition_contract, key_pair)
 
 
 def zenroom_petition(keyfile=None):

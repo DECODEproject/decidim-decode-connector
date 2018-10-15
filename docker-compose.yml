@@ -33,8 +33,4 @@ services:
   keygen:
     build: .
     image: decidim-decode-connector
-    command: ["python", "keygen.py", "--filename", "/keys/key.json"]
-  keygen-zenroom:
-    build: .
-    image: decidim-decode-connector
     command: ["sh", "-c", "zenroom /opt/contracts/keygen.lua > /keys/key.json"]

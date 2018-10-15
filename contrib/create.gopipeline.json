@@ -52,7 +52,7 @@
               "command": "sh",
               "arguments": [
                 "-c",
-                "make create-zenroom tor=true ci_keys=true CHAINSPACE_API_URL=${CHAINSPACE_API_URL}"
+                "make create tor=true ci_keys=true CHAINSPACE_API_URL=${CHAINSPACE_API_URL}"
               ]
             },
             {

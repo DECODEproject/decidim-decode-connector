@@ -107,65 +107,6 @@ make close \
 ```
 
 
-
-## Zenroom Petition flows
-
-### Local (development)
-
-If no parameters are specified when running petition commands, by default it will use the settings for the local environment.
-
-1. Generate a key pair in `keys/key.json` with the following command:
-```
-make keygen-zenroom
-```
-
-2. Create petition in local Chainspace
-```
-make create-zenroom
-```
-
-3. Count current number of signatures in local Chainspace
-```
-make count-zenroom
-```
-
-4. Close petition in local Chainspace
-```
-make close-zenroom
-```
-
-### Using boxes
-
-In order to run the petition commands in the boxes, make sure to provide the `tor=true` parameter and the actual URLs.
-
-1. Generate a key pair in `keys/key.json` with the following command:
-```
-make keygen-zenroom
-```
-
-2. Create petition in boxes
-```
-make create-zenroom \
-  tor=true \
-  CHAINSPACE_API_URL=<chainspace_api_url>
-```
-
-3. Count current number of signatures in boxes
-```
-make count-zenroom \
-  tor=true \
-  CHAINSPACE_API_URL=<chainspace_api_url>
-```
-
-4. Close petition in boxes
-```
-make close-zenroom \
-  tor=true \
-  CHAINSPACE_API_URL=<chainspace_api_url> \
-  DECIDIM_MOCK_URL=<decidim_mock_url>
-```
-
-
 ### Development commands
 
 Run linter:

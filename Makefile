@@ -36,33 +36,16 @@ keygen:
 		-v $(shell pwd)/$(keys_folder):/keys \
 		keygen
 
-keygen-zenroom:
-	$(dc-run) \
-		-v $(shell pwd)/$(keys_folder):/keys \
-		keygen-zenroom
-
-
 create:
 	$(dc-run) \
 		-v $(shell pwd)/$(keys_folder):/keys \
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
 		create
 
-create-zenroom:
-	$(dc-run) \
-		-v $(shell pwd)/$(keys_folder):/keys \
-		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
-		create python create.py --zenroom
-
 count:
 	$(dc-run) \
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
 		count
-
-count-zenroom:
-	$(dc-run) \
-		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
-		count python count.py --zenroom
 
 close:
 	$(dc-run) \
@@ -70,13 +53,6 @@ close:
 		-e DECIDIM_MOCK_URL=$(DECIDIM_MOCK_URL) \
 		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
 		close
-
-close-zenroom:
-	$(dc-run) \
-		-v $(shell pwd)/$(keys_folder):/keys \
-		-e DECIDIM_MOCK_URL=$(DECIDIM_MOCK_URL) \
-		-e CHAINSPACE_API_URL=$(CHAINSPACE_API_URL) \
-		close python close.py --zenroom
 
 
 lint:

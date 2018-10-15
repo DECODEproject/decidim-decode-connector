@@ -20,24 +20,6 @@ class CloseTestCase(unittest.TestCase):
         }
 
     @responses.activate
-    @mock.patch('close.petition')
-    def test_request_tally_from_wallet_proxy(self, petition_func_mock):
-        tally_response = [10, 5]
-
-        petition_mock = mock.Mock()
-        petition_mock.get_results.return_value = tally_response
-        petition_func_mock.return_value = petition_mock
-
-        tally = close.request_tally(self.key_pair, False)
-
-        expected_tally = {
-            'yes': 10,
-            'no': 5
-        }
-        self.assertEqual(tally, expected_tally)
-        petition_func_mock.assert_called_with(self.key_pair)
-
-    @responses.activate
     @mock.patch('close.zenroom_petition')
     def test_request_tally_from_wallet_proxy(self, petition_func_mock):
         tally_response = [10, 5]
@@ -46,7 +28,7 @@ class CloseTestCase(unittest.TestCase):
         petition_mock.get_results.return_value = tally_response
         petition_func_mock.return_value = petition_mock
 
-        tally = close.request_tally(self.key_pair, True)
+        tally = close.request_tally(self.key_pair)
 
         expected_tally = {
             'yes': 10,
@@ -95,29 +77,6 @@ class CloseTestCase(unittest.TestCase):
 
     @responses.activate
     @mock.patch.dict(os.environ, {})
-    @mock.patch('close.petition')
-    def test_main_final_test_its_the_final_countdown(self, petition_func_mock):
-        tally_outcome = [10, 5]
-
-        petition_mock = mock.Mock()
-        petition_mock.get_results.return_value = tally_outcome
-        petition_func_mock.return_value = petition_mock
-
-        responses.add(responses.POST, self.decidim_mock_close_url, json={}, status=200)
-
-        close.main('./contrib/key.json', False)
-
-        request_sent = responses.calls[0].request
-
-        expected_outcome = {
-            'yes': 10,
-            'no': 5
-        }
-        self.assertEqual(len(responses.calls), 1)
-        self.assertEqual(json.loads(request_sent.body), expected_outcome)
-
-    @responses.activate
-    @mock.patch.dict(os.environ, {})
     @mock.patch('close.zenroom_petition')
     def test_main_final_test_its_the_final_countdown(self, petition_func_mock):
         tally_outcome = [10, 5]
@@ -128,7 +87,7 @@ class CloseTestCase(unittest.TestCase):
 
         responses.add(responses.POST, self.decidim_mock_close_url, json={}, status=200)
 
-        close.main('./contrib/key.json', True)
+        close.main('./contrib/key.json')
 
         request_sent = responses.calls[0].request
 

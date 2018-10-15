@@ -1,11 +1,6 @@
-from urlparse import urlparse
 import click
 import sys
-from src.chainspace_client import ChainspaceClient
-from src.chainspace_repository import ChainspaceRepository
-from chainspacecontract.examples import petition_encrypted as petition_contract
-from read_keys import load_keys
-from petition_builder import petition, zenroom_petition
+from petition_builder import zenroom_petition
 
 
 class CreateRequestException(Exception):
@@ -13,13 +8,9 @@ class CreateRequestException(Exception):
         return 'Failed to create petition: ' + self.message
 
 
-def create_petition(key_pair, use_zenroom):
+def create_petition(key_pair):
     try:
-        if use_zenroom:
-            our_object = zenroom_petition(key_pair).initialize()
-        else:
-            our_object = petition(key_pair).initialize()
-
+        our_object = zenroom_petition(key_pair).initialize()
         petitionObjectID = our_object.object_id
         result = {'petitionObjectId': petitionObjectID}
 
@@ -28,13 +19,9 @@ def create_petition(key_pair, use_zenroom):
         raise CreateRequestException(str(e))
 
 
-def main(keyfile, use_zenroom):
+def main(keyfile):
     try:
-        if use_zenroom:
-            results = create_petition(keyfile, use_zenroom)
-        else:
-            keys = load_keys(keyfile)
-            results = create_petition(keys, use_zenroom)
+        results = create_petition(keyfile)
 
         print "petition created successfully!"
         print results
@@ -45,9 +32,8 @@ def main(keyfile, use_zenroom):
 
 @click.command()
 @click.option('--keyfile', default='/keys/key.json', help='Seed for key generation')
-@click.option('--zenroom/--no-zenroom', default=False)
-def cli_main(keyfile, zenroom):
-    main(keyfile, zenroom)
+def cli_main(keyfile):
+    main(keyfile)
 
 
 if __name__ == '__main__':
