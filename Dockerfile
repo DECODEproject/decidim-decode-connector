@@ -1,24 +1,4 @@
-FROM alpine:3.6
-
-ARG zenroom_tag=bfa60a9e48b781c09fd9b4fe4bfef865bc127075
-
-WORKDIR /code/zenroom
-
-RUN apk update
-RUN apk upgrade
-RUN apk add --no-cache git openssh git
-
-RUN git clone \
-    https://github.com/DECODEproject/zenroom.git \
-    . \
- && git checkout ${zenroom_tag} \
- && git submodule init \
- && git submodule update
-
-RUN apk add --no-cache make cmake gcc musl-dev musl musl-utils
-RUN make musl-system
-
-
+FROM dyne/zenroom:0.8.1
 FROM python:2.7-alpine
 
 RUN apk add --no-cache openssl-dev libffi-dev build-base
